@@ -2,11 +2,17 @@ package databaseOperations
 
 import (
 	"database/sql"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
 
-func ConnectToDB(dbUser string, dbPass string, dbSource string, dbName string) *sql.DB {
-	db, err := sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbSource+")/"+dbName)
+var db *sql.DB
+
+func ConnectToDB(dbUser string, dbPass string, dbSource string, dbPort string, dbName string) *sql.DB {
+	var err error
+	fmt.Printf("Attempting to connect to database '%s'\n", dbName)
+	db, err = sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbSource+":"+dbPort+")/"+dbName)
 
 	if err != nil {
 		log.Fatalf("Unable to connect to database because %s", err)
@@ -19,7 +25,12 @@ func ConnectToDB(dbUser string, dbPass string, dbSource string, dbName string) *
 	return db
 }
 
-func CloseDB(db *sql.DB) error {
+func GetDB() *sql.DB {
+	return db
+}
+
+func CloseDB() error {
+	fmt.Println("Closing DB")
 	err := db.Close()
 	if err != nil {
 		return err

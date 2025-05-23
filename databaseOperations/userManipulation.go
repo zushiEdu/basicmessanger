@@ -26,7 +26,7 @@ func CreateUser(firstName string, lastName string, email string, password string
 		return id, nil
 	} else {
 		// User with this email already exists
-		return -1, errors.New("user with this email already exists")
+		return -1, errors.New("User with this email already exists")
 	}
 }
 

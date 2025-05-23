@@ -1,8 +1,16 @@
 package startup
 
-import "main/databaseOperations"
+import (
+	"github.com/gin-gonic/gin"
+	"main/config"
+	"main/databaseOperations"
+	"main/routers"
+)
 
-func Server() {
-	db = databaseOperations.ConnectToDB(dbUser, dbPass, dbSource, dbName)
-	databaseOperations.CloseDB(db)
+func ProductionServer() {
+	env := config.LoadEnv()
+	gin.SetMode(gin.ReleaseMode)
+	SetAwaitTermination()
+	databaseOperations.ConnectToDB(env.DBUser, env.DBPass, env.DBHost, env.DBPort, env.DBName)
+	routers.Activate()
 }
