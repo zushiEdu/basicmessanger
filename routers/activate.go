@@ -9,6 +9,9 @@ import (
 func Activate() {
 	fmt.Println("Starting routers")
 	router := gin.Default()
+
 	router.POST("/users/", api.CreateUserHandler)
-	router.Run("localhost:1234")
+	router.PUT("/users/", api.EditUserHandler)
+
+	router.Run("localhost:2345")
 }
