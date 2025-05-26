@@ -28,7 +28,7 @@ func CreateUserHandler(ctx *gin.Context) {
 }
 
 func EditUserHandler(ctx *gin.Context) {
-	fmt.Println("Got create edit request")
+	fmt.Println("Got edit user request")
 
 	var user types.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
@@ -38,6 +38,42 @@ func EditUserHandler(ctx *gin.Context) {
 	}
 
 	err := databaseOperations.EditUser(user, databaseOperations.GetDB())
+	if err == nil {
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": nil})
+	} else {
+		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error(), "data": nil})
+	}
+}
+
+func GetUserHandler(ctx *gin.Context) {
+	fmt.Println("Got get user request")
+
+	var email types.Email
+	if err := ctx.ShouldBindJSON(&email); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		fmt.Println("Could not process request body")
+		return
+	}
+
+	user, err := databaseOperations.GetUser(email.Email, databaseOperations.GetDB())
+	if err == nil {
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": user})
+	} else {
+		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error(), "data": nil})
+	}
+}
+
+func DeleteUserHandler(ctx *gin.Context) {
+	fmt.Println("Got delete user request")
+
+	var email types.Email
+	if err := ctx.ShouldBindJSON(&email); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		fmt.Println("Could not process request body")
+		return
+	}
+
+	err := databaseOperations.DeleteUser(email.Email, databaseOperations.GetDB())
 	if err == nil {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": nil})
 	} else {

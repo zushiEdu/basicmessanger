@@ -12,6 +12,8 @@ func Activate() {
 
 	router.POST("/users/", api.CreateUserHandler)
 	router.PUT("/users/", api.EditUserHandler)
+	router.GET("/users/", api.GetUserHandler)
+	router.DELETE("/users/", api.DeleteUserHandler)
 
-	router.Run("localhost:2345")
+	router.Run("localhost:1234")
 }
