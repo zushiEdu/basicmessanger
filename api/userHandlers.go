@@ -13,7 +13,7 @@ func CreateUserHandler(ctx *gin.Context) {
 
 	var user types.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{"message": err.Error()})
 		fmt.Println("Could not process request body")
 		return
 	}
@@ -32,16 +32,16 @@ func EditUserHandler(ctx *gin.Context) {
 
 	var user types.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{"message": err.Error()})
 		fmt.Println("Could not process request body")
 		return
 	}
 
 	err := databaseOperations.EditUser(user, databaseOperations.GetDB())
 	if err == nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": nil})
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success"})
 	} else {
-		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error(), "data": nil})
+		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 	}
 }
 
@@ -50,7 +50,7 @@ func GetUserHandler(ctx *gin.Context) {
 
 	var email types.Email
 	if err := ctx.ShouldBindJSON(&email); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{"message": err.Error()})
 		fmt.Println("Could not process request body")
 		return
 	}
@@ -59,7 +59,7 @@ func GetUserHandler(ctx *gin.Context) {
 	if err == nil {
 		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": user})
 	} else {
-		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error(), "data": nil})
+		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 	}
 }
 
@@ -68,15 +68,15 @@ func DeleteUserHandler(ctx *gin.Context) {
 
 	var email types.Email
 	if err := ctx.ShouldBindJSON(&email); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{"message": err.Error()})
 		fmt.Println("Could not process request body")
 		return
 	}
 
 	err := databaseOperations.DeleteUser(email.Email, databaseOperations.GetDB())
 	if err == nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": nil})
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success"})
 	} else {
-		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error(), "data": nil})
+		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 	}
 }
