@@ -2,33 +2,38 @@ package databaseOperations
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"main/types"
 )
 
-func GetMessages(fromUserId int, toUserId int, db *sql.DB) []string {
-	rows, err := db.Query("SELECT message FROM messages WHERE userFrom = ? AND userTo = ?", fromUserId, toUserId)
+func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]string, error) {
+	rows, err := db.Query("SELECT message FROM messages WHERE userFrom = ? AND userTo = ?", messageRequest.FromUser, messageRequest.ToUser)
 
 	var list []string
 
 	for rows.Next() {
-		var text string
-		err = rows.Scan(&text)
+		var message string
+		err = rows.Scan(&message)
+
 		if err != nil {
-			panic(err.Error())
+			log.Fatalf("Error %s", err)
 		}
-		list = append(list, text)
+		list = append(list, message)
 	}
 
-	return list
+	return list, nil
 }
 
-// TODO: implement a check so that the system does not try to send a message to/from a user that does not exist
 func SendMessage(message types.Message, db *sql.DB) error {
-	_, err := db.Exec("INSERT INTO messages (message,userFrom,userTo,timeStamp) VALUES(?,?,?,NOW())", message.Message, message.FromUser, message.ToUser)
-	if err != nil {
-		log.Fatalf("Error: %s", err)
-		return err
+	if UserExistsId(message.FromUser, db) && UserExistsId(message.ToUser, db) {
+		_, err := db.Exec("INSERT INTO messages (message,userFrom,userTo,timeStamp) VALUES(?,?,?,NOW())", message.Message, message.FromUser, message.ToUser)
+		if err != nil {
+			log.Fatalf("Error: %s", err)
+			return err
+		} else {
+			return nil
+		}
 	}
-	return nil
+	return errors.New("could not send message")
 }

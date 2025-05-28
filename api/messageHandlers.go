@@ -12,7 +12,7 @@ func CreateMessageHandler(ctx *gin.Context) {
 	fmt.Println("Got create message request")
 
 	var message types.Message
-	if err := ctx.ShouldBindJSON(&message); err != nil {
+	if err := ctx.BindJSON(&message); err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		fmt.Println("Could not process request body")
 		return
@@ -27,18 +27,18 @@ func CreateMessageHandler(ctx *gin.Context) {
 }
 
 func GetMessageHandler(ctx *gin.Context) {
-	fmt.Println("Got get user request")
+	fmt.Println("Got get message request")
 
-	var email types.Email
-	if err := ctx.ShouldBindJSON(&email); err != nil {
+	var message types.MessageRequest
+	if err := ctx.BindJSON(&message); err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		fmt.Println("Could not process request body")
 		return
 	}
 
-	user, err := databaseOperations.GetUser(email.Email, databaseOperations.GetDB())
+	messages, err := databaseOperations.GetMessages(message, databaseOperations.GetDB())
 	if err == nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": user})
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": messages})
 	} else {
 		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 	}

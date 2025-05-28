@@ -16,7 +16,7 @@ func Activate() {
 	router.DELETE("/users/", api.DeleteUserHandler)
 
 	router.POST("/message/", api.CreateMessageHandler)
-	//router.GET("/message/", api.GetMessageHandler)
+	router.GET("/message/", api.GetMessageHandler)
 
 	err := router.Run("localhost:1234")
 	if err != nil {
