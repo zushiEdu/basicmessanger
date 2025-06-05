@@ -8,7 +8,7 @@ import (
 )
 
 func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]string, error) {
-	rows, err := db.Query("SELECT message FROM messages WHERE userFrom = ? AND userTo = ?", messageRequest.FromUser, messageRequest.ToUser)
+	rows, err := db.Query("SELECT message FROM messages WHERE userTo = ?", messageRequest.ToUser)
 
 	var list []string
 

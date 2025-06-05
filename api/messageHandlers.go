@@ -6,6 +6,7 @@ import (
 	"main/databaseOperations"
 	"main/types"
 	"net/http"
+	"strconv"
 )
 
 func CreateMessageHandler(ctx *gin.Context) {
@@ -30,11 +31,7 @@ func GetMessageHandler(ctx *gin.Context) {
 	fmt.Println("Got get message request")
 
 	var message types.MessageRequest
-	if err := ctx.BindJSON(&message); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
-		fmt.Println("Could not process request body")
-		return
-	}
+	message.ToUser, _ = strconv.Atoi(ctx.Query("toUser"))
 
 	messages, err := databaseOperations.GetMessages(message, databaseOperations.GetDB())
 	if err == nil {

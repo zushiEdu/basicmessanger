@@ -7,6 +7,5 @@ type Message struct {
 }
 
 type MessageRequest struct {
-	FromUser int `json:"fromUser,string"`
-	ToUser   int `json:"toUser,string"`
+	ToUser int `json:"toUser,string"`
 }
