@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Basic Front End</h2>
+
+    <form>
+        <label>Your ID</label>
+        <input id="idFrom"></input>
+    </form>
+
+    <form><br>
+        <label>Text to send</label>
+        <input id="text"></input><br>
+        <label>ID to send message to</label>
+        <input id="idTo"></input>
+    </form>
+
+    <button id="send" onclick="sendMessage()">Send Message</button>
+    <p>Messages:</p>
+    <div id="chat"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
