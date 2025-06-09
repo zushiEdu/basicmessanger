@@ -7,23 +7,27 @@ import (
 )
 
 type Env struct {
-	DBHost string
-	DBName string
-	DBPort string
-	DBUser string
-	DBPass string
-	MODE   string
+	DBHost  string
+	DBName  string
+	DBPort  string
+	DBUser  string
+	DBPass  string
+	MODE    string
+	APIHost string
+	APIPort string
 }
 
 func LoadEnv() *Env {
 	fmt.Println("Loading environment variables")
 	godotenv.Load(".env")
 	return &Env{
-		DBHost: os.Getenv("DB_SOURCE"),
-		DBName: os.Getenv("DB_NAME"),
-		DBPort: os.Getenv("DB_PORT"),
-		DBUser: os.Getenv("DB_USER"),
-		DBPass: os.Getenv("DB_PASS"),
-		MODE:   os.Getenv("MODE"),
+		DBHost:  os.Getenv("DB_SOURCE"),
+		DBName:  os.Getenv("DB_NAME"),
+		DBPort:  os.Getenv("DB_PORT"),
+		DBUser:  os.Getenv("DB_USER"),
+		DBPass:  os.Getenv("DB_PASS"),
+		MODE:    os.Getenv("MODE"),
+		APIHost: os.Getenv("API_HOST"),
+		APIPort: os.Getenv("API_PORT"),
 	}
 }

@@ -7,27 +7,32 @@ import (
 	"main/types"
 )
 
-func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]string, error) {
-	rows, err := db.Query("SELECT message FROM messages WHERE userTo = ?", messageRequest.ToUser)
+func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]types.MessageResponse, error) {
+	rows, err := db.Query("SELECT message, userFrom FROM messages WHERE userTo = ? or userFrom = ?", messageRequest.InvolvingUser, messageRequest.InvolvingUser)
 
-	var list []string
+	var list []types.MessageResponse
 
 	for rows.Next() {
 		var message string
-		err = rows.Scan(&message)
+		var userFrom int
+		err = rows.Scan(&message, &userFrom)
 
 		if err != nil {
 			log.Fatalf("Error %s", err)
 		}
-		list = append(list, message)
+		list = append(list, types.MessageResponse{Message: message, UserFrom: userFrom})
 	}
 
 	return list, nil
 }
 
-func SendMessage(message types.Message, db *sql.DB) error {
-	if UserExistsId(message.FromUser, db) && UserExistsId(message.ToUser, db) {
-		_, err := db.Exec("INSERT INTO messages (message,userFrom,userTo,timeStamp) VALUES(?,?,?,NOW())", message.Message, message.FromUser, message.ToUser)
+func SendMessage(token string, message types.Message, db *sql.DB) error {
+	row := db.QueryRow("SELECT id FROM tokens WHERE signature = ?", token)
+	var fromId int
+	row.Scan(&fromId)
+
+	if UserExistsId(fromId, db) && UserExistsId(message.ToUser, db) {
+		_, err := db.Exec("INSERT INTO messages (message,userFrom,userTo,timeStamp) VALUES(?,?,?,NOW())", message.Message, fromId, message.ToUser)
 		if err != nil {
 			log.Fatalf("Error: %s", err)
 			return err

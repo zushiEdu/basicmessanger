@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"main/api"
+	"main/config"
 	"time"
 )
 
@@ -13,22 +14,26 @@ func Activate() {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Length"},
+		AllowOrigins:     []string{"*", "http://localhost:5500"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,
+		ExposeHeaders:    []string{"Content-Length"},
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.POST("/users/", api.CreateUserHandler)
-	router.PUT("/users/", api.EditUserHandler)
-	router.GET("/users/", api.GetUserHandler)
-	router.DELETE("/users/", api.DeleteUserHandler)
+	router.POST("/login", api.LoginHandler)
 
-	router.POST("/message/", api.CreateMessageHandler)
-	router.GET("/message/", api.GetMessageHandler)
+	router.POST("/users", api.CreateUserHandler)
+	router.PUT("/users", api.EditUserHandler)
+	router.GET("/users", api.GetUserHandler)
+	router.DELETE("/users", api.DeleteUserHandler)
 
-	err := router.Run("10.0.0.243:2345")
+	router.POST("/message", api.CreateMessageHandler)
+	router.GET("/message", api.GetMessageHandler)
+
+	env := config.LoadEnv()
+	err := router.Run(env.APIHost + ":" + env.APIPort)
 	if err != nil {
 		return
 	}

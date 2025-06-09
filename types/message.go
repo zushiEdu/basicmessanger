@@ -1,11 +1,15 @@
 package types
 
 type Message struct {
-	FromUser int    `json:"fromUser,string"`
-	ToUser   int    `json:"toUser,string"`
-	Message  string `json:"message"`
+	ToUser  int    `json:"toUser,string"`
+	Message string `json:"message"`
 }
 
 type MessageRequest struct {
-	ToUser int `json:"toUser,string"`
+	InvolvingUser int `json:"involving"`
+}
+
+type MessageResponse struct {
+	Message  string `json:"message"`
+	UserFrom int    `json:"userFrom"`
 }

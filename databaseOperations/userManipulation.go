@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"main/smallFunctions"
 	"main/types"
 	"strconv"
 )
@@ -68,18 +69,70 @@ func CreateUser(user types.User, db *sql.DB) (int, error) {
 	}
 }
 
-func GetUser(email string, db *sql.DB) (types.User, error) {
-	row, _ := db.Query("SELECT * FROM users WHERE email = ?", email)
-	if row.Next() {
-		var id, firstName, lastName, password string
-		err := row.Scan(&id, &firstName, &lastName, &email, &password)
-		if err != nil {
-			return types.User{}, err
+func GetIdList(tokenSignature string, db *sql.DB) []types.SmallUser {
+	var toUserId string
+	row := db.QueryRow("SELECT id from tokens WHERE signature = ?", tokenSignature)
+	row.Scan(&toUserId)
+	convertedId, _ := strconv.Atoi(toUserId)
+
+	var idList []int
+	rows, _ := db.Query("SELECT DISTINCT userFrom from messages where userTo = ?", convertedId)
+	for rows.Next() {
+		var tempId int
+		rows.Scan(&tempId)
+		idList = append(idList, tempId)
+	}
+
+	rows, _ = db.Query("SELECT DISTINCT userTo from messages where userFrom = ?", convertedId)
+	for rows.Next() {
+		var tempId int
+		rows.Scan(&tempId)
+		if !smallFunctions.Contains(tempId, idList) {
+			idList = append(idList, tempId)
 		}
-		cleanedId, _ := strconv.Atoi(id)
-		return types.User{Id: cleanedId, FirstName: firstName, LastName: lastName, Email: email, Password: password}, nil
+	}
+
+	var smallUsers []types.SmallUser
+	for i := 0; i < len(idList); i++ {
+		var newUser types.SmallUser
+		row := db.QueryRow("SELECT first_name, last_name FROM users WHERE id = ?", idList[i])
+		row.Scan(&newUser.FirstName, &newUser.LastName)
+		newUser.Id = idList[i]
+		smallUsers = append(smallUsers, newUser)
+	}
+	return smallUsers
+}
+
+func GetUser(email string, db *sql.DB) ([]types.User, error) {
+	if email == "" {
+		rows, _ := db.Query("SELECT * FROM users")
+
+		var users []types.User
+
+		for rows.Next() {
+			var id, firstName, lastName, password string
+			err := rows.Scan(&id, &firstName, &lastName, &email, &password)
+			if err != nil {
+				return []types.User{}, err
+			}
+			cleanedId, _ := strconv.Atoi(id)
+			users = append(users, types.User{Id: cleanedId, FirstName: firstName, LastName: lastName, Email: email, Password: password})
+		}
+
+		return users, nil
 	} else {
-		return types.User{}, errors.New("no user exists with this email")
+		row, _ := db.Query("SELECT * FROM users WHERE email = ?", email)
+		if row.Next() {
+			var id, firstName, lastName, password string
+			err := row.Scan(&id, &firstName, &lastName, &email, &password)
+			if err != nil {
+				return []types.User{}, err
+			}
+			cleanedId, _ := strconv.Atoi(id)
+			return []types.User{{Id: cleanedId, FirstName: firstName, LastName: lastName, Email: email, Password: password}}, nil
+		} else {
+			return []types.User{}, errors.New("User not found")
+		}
 	}
 }
 

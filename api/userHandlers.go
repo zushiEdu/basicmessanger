@@ -6,6 +6,7 @@ import (
 	"main/databaseOperations"
 	"main/types"
 	"net/http"
+	"strings"
 )
 
 func CreateUserHandler(ctx *gin.Context) {
@@ -48,18 +49,22 @@ func EditUserHandler(ctx *gin.Context) {
 func GetUserHandler(ctx *gin.Context) {
 	fmt.Println("Got get user request")
 
-	var email types.Email
-	if err := ctx.ShouldBindJSON(&email); err != nil {
-		ctx.JSON(400, gin.H{"message": err.Error()})
-		fmt.Println("Could not process request body")
-		return
-	}
+	mode := ctx.Query("mode")
+	email := ctx.Query("email")
 
-	user, err := databaseOperations.GetUser(email.Email, databaseOperations.GetDB())
-	if err == nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": user})
-	} else {
-		ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+	token := strings.TrimPrefix(ctx.GetHeader("Authorization"), "Bearer ")
+
+	db := databaseOperations.GetDB()
+	if mode == "single" {
+		user, err := databaseOperations.GetUser(email, db)
+		if err == nil {
+			ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": user})
+		} else {
+			ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+		}
+	} else if mode == "multi" {
+		list := databaseOperations.GetIdList(token, db)
+		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": list})
 	}
 }
 
