@@ -5,7 +5,3 @@ type Token struct {
 	Signature string `json:"signature,string"`
 	Expiry    string `json:"expiry,string"`
 }
-
-type TokenRequest struct {
-	ID int `json:"id,string"`
-}

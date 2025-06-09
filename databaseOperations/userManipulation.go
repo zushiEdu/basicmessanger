@@ -103,20 +103,29 @@ func GetIdList(tokenSignature string, db *sql.DB) []types.SmallUser {
 	return smallUsers
 }
 
-func GetUser(email string, db *sql.DB) ([]types.User, error) {
+func GetUserPass(email string, db *sql.DB) (string, int) {
+	row := db.QueryRow("SELECT password, id FROM users WHERE email = ?", email)
+
+	var password string
+	var id int
+	row.Scan(&password, &id)
+	return password, id
+}
+
+func GetUser(email string, db *sql.DB) ([]types.SmallUser, error) {
 	if email == "" {
 		rows, _ := db.Query("SELECT * FROM users")
 
-		var users []types.User
+		var users []types.SmallUser
 
 		for rows.Next() {
 			var id, firstName, lastName, password string
 			err := rows.Scan(&id, &firstName, &lastName, &email, &password)
 			if err != nil {
-				return []types.User{}, err
+				return []types.SmallUser{}, err
 			}
 			cleanedId, _ := strconv.Atoi(id)
-			users = append(users, types.User{Id: cleanedId, FirstName: firstName, LastName: lastName, Email: email, Password: password})
+			users = append(users, types.SmallUser{Id: cleanedId, FirstName: firstName, LastName: lastName})
 		}
 
 		return users, nil
@@ -126,12 +135,12 @@ func GetUser(email string, db *sql.DB) ([]types.User, error) {
 			var id, firstName, lastName, password string
 			err := row.Scan(&id, &firstName, &lastName, &email, &password)
 			if err != nil {
-				return []types.User{}, err
+				return []types.SmallUser{}, err
 			}
 			cleanedId, _ := strconv.Atoi(id)
-			return []types.User{{Id: cleanedId, FirstName: firstName, LastName: lastName, Email: email, Password: password}}, nil
+			return []types.SmallUser{{Id: cleanedId, FirstName: firstName, LastName: lastName}}, nil
 		} else {
-			return []types.User{}, errors.New("User not found")
+			return []types.SmallUser{}, errors.New("User not found")
 		}
 	}
 }

@@ -32,18 +32,17 @@ func TokenIsValid(signature string, db *sql.DB) bool {
 	return true
 }
 
-func TokenExists(request types.TokenRequest, db *sql.DB) bool {
-	_, err := GetToken(request, db)
+func TokenExists(id int, db *sql.DB) bool {
+	_, err := GetToken(id, db)
 	if err == nil {
 		return true
 	}
 	return false
 }
 
-func GetToken(request types.TokenRequest, db *sql.DB) (types.Token, error) {
-	rows, err := db.Query("SELECT * FROM tokens WHERE id = ?", request.ID)
+func GetToken(id int, db *sql.DB) (types.Token, error) {
+	rows, err := db.Query("SELECT * FROM tokens WHERE id = ?", id)
 
-	var id int
 	var signature, expiry string
 
 	if rows != nil && rows.Next() {
@@ -57,9 +56,9 @@ func GetToken(request types.TokenRequest, db *sql.DB) (types.Token, error) {
 	}
 }
 
-func MakeToken(request types.TokenRequest, db *sql.DB) (string, error) {
+func MakeToken(id int, db *sql.DB) (string, error) {
 	token := smallFunctions.GenerateToken()
-	_, err := db.Exec("INSERT INTO tokens (id, signature, expiry) VALUES(?,?,DATE_ADD(NOW(), INTERVAL ? DAY))", request.ID, token, config.ExpiryOffset)
+	_, err := db.Exec("INSERT INTO tokens (id, signature, expiry) VALUES(?,?,DATE_ADD(NOW(), INTERVAL ? DAY))", id, token, config.ExpiryOffset)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 		return "", err

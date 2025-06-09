@@ -19,19 +19,25 @@ func LoginHandler(ctx *gin.Context) {
 	}
 
 	db := databaseOperations.GetDB()
-	user, _ := databaseOperations.GetUser(request.Email, db)
-	tokenRequest := types.TokenRequest{ID: user[0].Id}
+	password, id := databaseOperations.GetUserPass(request.Email, db)
 
-	if user[0].Email == request.Email && user[0].Password == request.Password {
-		if databaseOperations.TokenExists(tokenRequest, db) {
-			ctx.JSON(http.StatusConflict, gin.H{"message": "Token already exists"})
+	if password == request.Password {
+		if databaseOperations.TokenExists(id, db) {
+			token, err := databaseOperations.GetToken(id, db)
+			if err == nil {
+				ctx.JSON(http.StatusOK, gin.H{"message": "Success", "token": token.Signature})
+			} else {
+				ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+			}
 		} else {
-			token, err := databaseOperations.MakeToken(tokenRequest, db)
+			token, err := databaseOperations.MakeToken(id, db)
 			if err == nil {
 				ctx.JSON(http.StatusOK, gin.H{"message": "Success", "token": token})
 			} else {
 				ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 			}
 		}
+	} else {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Incorrect Password"})
 	}
 }
