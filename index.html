@@ -25,21 +25,30 @@
         <label>Last Name</label>
         <input id="lastNameCreate">
         <label>Email</label>
-        <input type="emailt" id="emailCreate">
+        <input type="email" id="emailCreate">
         <label>Password</label>
         <input type="password" id="passwordCreate">
         <label>Confirm Password</label>
         <input type="password" id="passwordCreateConfirm">
-                <a  onclick="toggleLogin()">Create account instead</a>
+        <a onclick="tryCreateAccount()">Create Account</a>
+                <a  onclick="toggleLogin()">Login instead</a>
+    </form>
+
+    <form id="contactNew">
+      <h3>Message New Person</h3>
+      <label>Email</label>
+      <input id="searchByEmail">
+      <a onclick="openUndefinedChat()">Message</a>
     </form>
 
     <form id="chatSelection">
       <h3>Messages</h3>
+      <a onclick="triggerContactNew()">Message New Person</a>
     </form>
 
     <form id="messageForm">
       <div id="messageBar">
-        <a href="">Back</a>
+        <a onclick="triggerChatSelection()">Back</a>
         <p id="messageBarName">FirstName LastName</p>
       </div>
       <div id="chat"></div>
