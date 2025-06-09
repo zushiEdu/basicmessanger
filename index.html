@@ -3,26 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Message</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
-    <h2>Basic Front End</h2>
+    <form id="loginAccount">
+            <h3>Login</h3>
+        <label>Email</label>
+        <input id="emailLogin"></input>
+        <label>Password</label>
+        <input type="password" id="passwordLogin">
+        <a onclick="tryLogin()">Login</a>
 
-    <form>
-        <label>Your ID</label>
-        <input id="idFrom"></input>
+        <a  onclick="toggleLogin()">Create account instead</a>
     </form>
 
-    <form><br>
-        <label>Text to send</label>
-        <input id="text"></input><br>
-        <label>ID to send message to</label>
-        <input id="idTo"></input>
+    <form id="createAccount">
+      <h3>Create Account</h3>
+        <label>First Name</label>
+        <input id="firstNameCreate"></input>
+        <label>Last Name</label>
+        <input id="lastNameCreate">
+        <label>Email</label>
+        <input type="emailt" id="emailCreate">
+        <label>Password</label>
+        <input type="password" id="passwordCreate">
+        <label>Confirm Password</label>
+        <input type="password" id="passwordCreateConfirm">
+                <a  onclick="toggleLogin()">Create account instead</a>
     </form>
 
-    <button id="send" onclick="sendMessage()">Send Message</button>
-    <p>Messages:</p>
-    <div id="chat"></div>
+    <form id="chatSelection">
+      <h3>Messages</h3>
+    </form>
+
+    <form id="messageForm">
+      <div id="messageBar">
+        <a href="">Back</a>
+        <p id="messageBarName">FirstName LastName</p>
+      </div>
+      <div id="chat"></div>
+      <textarea id="text"></textarea>
+       <a id="send" onclick="sendMessage()">Send Message</a>
+    </form>
+
+
 
     <script src="script.js"></script>
   </body>
