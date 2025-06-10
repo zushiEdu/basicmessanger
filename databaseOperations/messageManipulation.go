@@ -8,7 +8,12 @@ import (
 )
 
 func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]types.MessageResponse, error) {
-	rows, err := db.Query("SELECT message, userFrom FROM messages WHERE userTo = ? or userFrom = ?", messageRequest.InvolvingUser, messageRequest.InvolvingUser)
+	row := db.QueryRow("SELECT id FROM tokens WHERE signature = ?", messageRequest.Token)
+
+	var id int
+	row.Scan(&id)
+
+	rows, err := db.Query("SELECT message, userFrom FROM messages WHERE (userTo = ? AND userFrom = ?) OR (userTo = ? AND userFrom = ?)", messageRequest.InvolvingUser, id, id, messageRequest.InvolvingUser)
 
 	var list []types.MessageResponse
 

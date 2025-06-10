@@ -40,10 +40,10 @@ func GetMessageHandler(ctx *gin.Context) {
 
 	var message types.MessageRequest
 	message.InvolvingUser, _ = strconv.Atoi(ctx.Query("involvingUser"))
-	token := strings.TrimPrefix(ctx.GetHeader("Authorization"), "Bearer ")
-	
+	message.Token = strings.TrimPrefix(ctx.GetHeader("Authorization"), "Bearer ")
+
 	db := databaseOperations.GetDB()
-	if databaseOperations.TokenIsValid(token, db) {
+	if databaseOperations.TokenIsValid(message.Token, db) {
 		messages, err := databaseOperations.GetMessages(message, db)
 		if err == nil {
 			ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": messages})

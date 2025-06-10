@@ -7,6 +7,7 @@ type Message struct {
 
 type MessageRequest struct {
 	InvolvingUser int `json:"involving"`
+	Token         string
 }
 
 type MessageResponse struct {
