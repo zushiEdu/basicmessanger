@@ -37,8 +37,10 @@ function triggerChatSelection() {
     menuState = "chatSelection"
 }
 
+let searchByEmail = document.getElementById('searchByEmail')
 function triggerContactNew() {
     menuState = "contactNew"
+    searchByEmail.value = ""
 }
 
 // Switches between create account and login screens
@@ -68,7 +70,6 @@ function tryLogin() {
         body: JSON.stringify(options)
     })
         .then(response => {
-            response.json()
             if (response.status === 401) {
                 alert("Incorrect email or password")
                 throw new Error("Unauthorized")
@@ -76,13 +77,14 @@ function tryLogin() {
             if (!response.ok) {
                 throw new Error("Could not log in")
             }
+
+            return response.json();
         })
         .then(data => {
-            menuState = "chatSelection"
             localStorage.setItem("token", data.token);
-
             emailLoginForm.value = ""
             passwordLoginForm.value = ""
+            menuState = "chatSelection"
         })
         .catch(error => console.error('Error:', error));
 }
@@ -103,9 +105,10 @@ function tryCreateAccount() {
             body: JSON.stringify(options),
         })
             .then(response => {
-                if (!response.ok) {
+                if (response.status === 409) {
+                    alert("Account with email already exists")
                     throw new Error("Could not create account")
-                } else {
+                } else if (response.ok) {
                     menuState = "loginScreen"
                     alert("Created new account successfully.")
 
@@ -117,6 +120,8 @@ function tryCreateAccount() {
                 }
             })
             .catch(error => console.error('Error:', error));
+    } else {
+        alert("Passwords do not match")
     }
 }
 
@@ -163,9 +168,7 @@ function openDefinedChat(id, name) {
     refreshChatWindow()
 }
 
-let searchByEmail = document.getElementById('searchByEmail')
 function openUndefinedChat(email) {
-    menuState = "chatWindow"
 
     let options = new URLSearchParams({ mode: "single", email: searchByEmail.value })
 
@@ -178,8 +181,12 @@ function openUndefinedChat(email) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data.data[0])
-            openDefinedChat(data.data[0].id, data.data[0].firstName + " " + data.data[0].lastName)
+            if (data.message === "User not found") {
+                alert("User not found")
+            } else {
+                openDefinedChat(data.data[0].id, data.data[0].firstName + " " + data.data[0].lastName)
+                menuState = "chatWindow"
+            }
         })
         .catch(error => console.error('Error:', error));
 
