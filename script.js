@@ -1,4 +1,4 @@
-const url = "http://10.0.0.243:1234/"
+const url = "http://127.0.0.1:1234/"
 
 let loginPanel = document.getElementById('loginAccount')
 let createAccountPanel = document.getElementById('createAccount')
@@ -73,14 +73,14 @@ function tryLogin() {
             if (response.status === 401) {
                 alert("Incorrect email or password")
                 throw new Error("Unauthorized")
-            }
-            if (!response.ok) {
+            } else if (!response.status === 200) {
                 throw new Error("Could not log in")
             }
 
             return response.json();
         })
         .then(data => {
+            console.log("Setting token")
             localStorage.setItem("token", data.token);
             emailLoginForm.value = ""
             passwordLoginForm.value = ""
