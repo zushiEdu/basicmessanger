@@ -13,7 +13,7 @@ func GetMessages(messageRequest types.MessageRequest, db *sql.DB) ([]types.Messa
 	var id int
 	row.Scan(&id)
 
-	rows, err := db.Query("SELECT message, userFrom FROM messages WHERE (userTo = ? AND userFrom = ?) OR (userTo = ? AND userFrom = ?)", messageRequest.InvolvingUser, id, id, messageRequest.InvolvingUser)
+	rows, err := db.Query("SELECT message, userFrom FROM messages WHERE (userTo = ? AND userFrom = ?) OR (userTo = ? AND userFrom = ?) ORDER BY timeStamp", messageRequest.InvolvingUser, id, id, messageRequest.InvolvingUser)
 
 	var list []types.MessageResponse
 

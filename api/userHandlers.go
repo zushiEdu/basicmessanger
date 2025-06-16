@@ -63,8 +63,12 @@ func GetUserHandler(ctx *gin.Context) {
 			ctx.JSON(http.StatusConflict, gin.H{"message": err.Error()})
 		}
 	} else if mode == "multi" {
-		list := databaseOperations.GetIdList(token, db)
-		ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": list})
+		if databaseOperations.TokenIsValid(token, db) {
+			list := databaseOperations.GetIdList(token, db)
+			ctx.JSON(http.StatusOK, gin.H{"message": "Success", "data": list})
+		} else {
+			ctx.JSON(http.StatusForbidden, gin.H{"message": "Invalid token"})
+		}
 	} else {
 		ctx.JSON(http.StatusConflict, gin.H{"message": "Invalid request"})
 	}

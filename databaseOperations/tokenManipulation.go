@@ -56,6 +56,17 @@ func GetToken(id int, db *sql.DB) (types.Token, error) {
 	}
 }
 
+func GetIdFromToken(signature string, db *sql.DB) (int, error) {
+	row := db.QueryRow("SELECT id FROM tokens WHERE signature=?", signature)
+	if row == nil {
+		return -1, errors.New("Token not found")
+	} else {
+		var id int
+		err := row.Scan(&id)
+		return id, err
+	}
+}
+
 func MakeToken(id int, db *sql.DB) (string, error) {
 	token := smallFunctions.GenerateToken()
 	_, err := db.Exec("INSERT INTO tokens (id, signature, expiry) VALUES(?,?,DATE_ADD(NOW(), INTERVAL ? DAY))", id, token, config.ExpiryOffset)
