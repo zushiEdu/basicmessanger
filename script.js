@@ -1,4 +1,4 @@
-const url = "http://127.0.0.1:1234/"
+const url = "http://10.0.0.243:1234/"
 
 let loginPanel = document.getElementById('loginAccount')
 let createAccountPanel = document.getElementById('createAccount')
@@ -8,7 +8,12 @@ let message = document.getElementById('text')
 let chatBox = document.getElementById('chat')
 let contactNew = document.getElementById('contactNew')
 
-let menuState = "loginScreen"
+let menuState
+if (localStorage.getItem("token") == "null") {
+    menuState = "loginScreen"
+} else {
+    menuState = "chatSelection"
+}
 
 setMenuState();
 function setMenuState() {
@@ -135,7 +140,15 @@ function refreshChatSelection() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 403) {
+                localStorage.setItem("token", null)
+                menuState = "loginScreen"
+                throw new Error("Token is invalid")
+            }
+
+            return response.json()
+        })
         .then(data => {
             if (Array.isArray(data?.data) && data.data.length > 0) {
                 let elementsToRemove = chatSelectionPanel.querySelectorAll('[id="chatOption"]');
@@ -168,8 +181,7 @@ function openDefinedChat(id, name) {
     refreshChatWindow()
 }
 
-function openUndefinedChat(email) {
-
+function openUndefinedChat() {
     let options = new URLSearchParams({ mode: "single", email: searchByEmail.value })
 
     fetch(url + `users?${options}`, {
@@ -206,7 +218,15 @@ function sendMessage() {
         },
         body: JSON.stringify(options),
     })
-        .then(response => { response.json() })
+        .then(response => {
+            if (response.status === 409) {
+                localStorage.setItem("token", null)
+                menuState = "loginScreen"
+                throw new Error("Token is invalid")
+            }
+
+            return response.json()
+        })
         .then(data => {
             message.value = ""
             refreshChatWindow()
