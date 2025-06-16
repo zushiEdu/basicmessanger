@@ -1,4 +1,4 @@
-const url = "http://10.0.0.243:1234/"
+const url = "http://10.0.0.162:1234/"
 
 let loginPanel = document.getElementById('loginAccount')
 let createAccountPanel = document.getElementById('createAccount')
@@ -36,6 +36,11 @@ function setMenuState() {
     } else if (menuState === "contactNew") {
         contactNew.style.display = "grid"
     }
+}
+
+function logout() {
+    localStorage.setItem("token", null)
+    menuState = "loginScreen"
 }
 
 function triggerChatSelection() {
@@ -142,8 +147,7 @@ function refreshChatSelection() {
     })
         .then(response => {
             if (response.status === 403) {
-                localStorage.setItem("token", null)
-                menuState = "loginScreen"
+                logout()
                 throw new Error("Token is invalid")
             }
 
@@ -220,8 +224,7 @@ function sendMessage() {
     })
         .then(response => {
             if (response.status === 409) {
-                localStorage.setItem("token", null)
-                menuState = "loginScreen"
+                logout()
                 throw new Error("Token is invalid")
             }
 

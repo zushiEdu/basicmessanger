@@ -11,16 +11,6 @@ body {
     color: #333;
 }
 
-/* Glassmorphism base style */
-.glass-panel {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-
 /* Login/Create Account Forms */
 #loginAccount, #createAccount {
     display: none;
@@ -48,23 +38,6 @@ input:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
-}
-
-button, [type="submit"] {
-    background: linear-gradient(135deg, #007AFF 0%, #00A1FF 100%);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button:hover, [type="submit"]:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
 }
 
 a {
@@ -97,7 +70,7 @@ textarea {
 }
 
 /* Chat Selection */
-#chatSelection {
+#chatSelection, #contactNew {
     display: none;
     max-width: 500px;
     margin: 20px auto;
@@ -148,22 +121,17 @@ textarea {
     max-width: 70%;
     padding: 12px 16px;
     border-radius: 18px;
-    margin: 5px 0 0 0;
+    margin: 2px 0 0 0;
     font-size: 16px;
     line-height: 1.4;
     position: relative;
-}
-
-#leftBubble + #leftBubble + #leftBubble{
-    margin: 1px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
 }
 
 #leftBubble {
     align-self: flex-start;
     background: #FFFFFF;
     border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
     color: #333;
 }
 
@@ -171,6 +139,7 @@ textarea {
     align-self: flex-end;
     background: #007AFF;
     border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
     color: white;
 }
 
