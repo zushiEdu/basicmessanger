@@ -1,0 +1,90 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input{
+    border-radius: 0;
+    border-width: 1;
+}
+
+form{
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+}
+
+body{
+    padding: 10px 20px;
+    margin: 0;
+}
+
+a{
+    text-decoration: underline;
+}
+
+a:hover{
+    cursor:pointer;
+}
+
+#loginAccount{
+    display: none;
+}
+
+#createAccount{
+    display: none;
+}
+
+#chatSelection{
+    display: none;
+}
+
+#contactNew{
+    display: none;
+}
+
+#messageForm{
+    display: none;
+    flex-direction: column;
+    height: 96vh;
+    grid-template-rows: auto 1fr auto;
+}
+
+#messageBar{
+    display: flex;
+    margin:20px 0px
+}
+
+#messageBar p{
+    margin:0px 20px
+}
+
+#chat{
+    display:flex;
+    flex-direction: column;
+    gap:10px;
+    margin:0 auto;
+    width: 100%;
+}
+
+#chatOption{
+    background-color: grey;
+    padding: 10px;
+        margin:5px 0px;
+    color: white;
+}
+
+#leftBubble{
+    align-self: flex-start;
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    margin: 0
+}
+
+#rightBubble{
+    align-self: flex-end;
+    background-color: red;
+    padding: 10px;
+    color: white;
+    margin: 0;
+}
