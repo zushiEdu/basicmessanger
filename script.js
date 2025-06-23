@@ -9,7 +9,7 @@ let chatBox = document.getElementById('chat')
 let contactNew = document.getElementById('contactNew')
 
 let menuState
-if (localStorage.getItem("token") == "null") {
+if (sessionStorage.getItem("token") == "null") {
     menuState = "loginScreen"
 } else {
     menuState = "chatSelection"
@@ -39,7 +39,7 @@ function setMenuState() {
 }
 
 function logout() {
-    localStorage.setItem("token", null)
+    sessionStorage.setItem("token", null)
     menuState = "loginScreen"
 }
 
@@ -91,7 +91,7 @@ function tryLogin() {
         })
         .then(data => {
             console.log("Setting token")
-            localStorage.setItem("token", data.token);
+            sessionStorage.setItem("token", data.token);
             emailLoginForm.value = ""
             passwordLoginForm.value = ""
             menuState = "chatSelection"
@@ -142,7 +142,7 @@ function refreshChatSelection() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
     })
         .then(response => {
@@ -192,7 +192,7 @@ function openUndefinedChat() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
     })
         .then(response => response.json())
@@ -218,7 +218,7 @@ function sendMessage() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify(options),
     })
@@ -245,7 +245,7 @@ function refreshChatWindow() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
     })
         .then(response => response.json())
