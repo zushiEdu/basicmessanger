@@ -1,0 +1,169 @@
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Login/Create Account Forms */
+#loginAccount, #createAccount {
+    display: none;
+    max-width: 400px;
+    margin: 10vh auto;
+    padding: 30px;
+}
+
+form {
+    width: 100%;
+    display: grid;
+    gap: 20px;
+}
+
+input {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
+}
+
+a {
+    color: #007AFF;
+    text-decoration: none;
+    font-weight: 500;
+        cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: #0055CC;
+    text-decoration: underline;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    color: #1c1c1e;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+    resize: none;
+    margin-bottom: 5px;
+}
+
+/* Chat Selection */
+#chatSelection, #contactNew {
+    display: none;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+#chatOption {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.5);
+}
+
+/* Message Form */
+#messageForm {
+    display: none;
+    height: 100vh;
+    padding: 20px;
+    flex-direction: column;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+#messageBar {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+#messageBar p {
+    margin: 0 15px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+#chat {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Message Bubbles */
+#leftBubble, #rightBubble {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    margin: 2px 0 0 0;
+    font-size: 16px;
+    line-height: 1.4;
+    position: relative;
+}
+
+#leftBubble {
+    align-self: flex-start;
+    background: #FFFFFF;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    color: #333;
+}
+
+#rightBubble {
+    align-self: flex-end;
+    background: #007AFF;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    color: white;
+}
+
+/* Send Message Bar */
+#sendMessage {
+    display: flex;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+#sendMessage input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+/* Back button */
+.back-button {
+    display: flex;
+    align-items: center;
+    color: #007AFF;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.back-button:hover {
+    opacity: 0.8;
+}
