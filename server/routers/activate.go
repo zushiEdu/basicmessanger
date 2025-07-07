@@ -32,7 +32,8 @@ func Activate() {
 	router.POST("/message", api.CreateMessageHandler)
 	router.GET("/message", api.GetMessageHandler)
 
-	env := config.LoadEnv()
+	env := config.GetEnv()
+	fmt.Println("Starting server at:", env.APIHost+":"+env.APIPort)
 	err := router.Run(env.APIHost + ":" + env.APIPort)
 	if err != nil {
 		return

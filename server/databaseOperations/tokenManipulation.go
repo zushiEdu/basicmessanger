@@ -41,6 +41,8 @@ func TokenExists(id int, db *sql.DB) bool {
 }
 
 func GetToken(id int, db *sql.DB) (types.Token, error) {
+	db.Exec("UPDATE tokens SET expiry=DATE_ADD(NOW(), INTERVAL ? DAY) WHERE id = ?", config.ExpiryOffset, id)
+
 	rows, err := db.Query("SELECT * FROM tokens WHERE id = ?", id)
 
 	var signature, expiry string
@@ -53,17 +55,6 @@ func GetToken(id int, db *sql.DB) (types.Token, error) {
 		return types.Token{ID: id, Signature: signature, Expiry: expiry}, nil
 	} else {
 		return types.Token{}, errors.New("Token not found")
-	}
-}
-
-func GetIdFromToken(signature string, db *sql.DB) (int, error) {
-	row := db.QueryRow("SELECT id FROM tokens WHERE signature=?", signature)
-	if row == nil {
-		return -1, errors.New("Token not found")
-	} else {
-		var id int
-		err := row.Scan(&id)
-		return id, err
 	}
 }
 

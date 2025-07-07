@@ -17,11 +17,12 @@ type Env struct {
 	APIPort string
 }
 
+var env *Env
+
 func LoadEnv() *Env {
 	fmt.Println("Loading environment variables")
 	godotenv.Load(".env")
-	return &Env{
-		DBHost:  os.Getenv("DB_SOURCE"),
+	env = &Env{DBHost: os.Getenv("DB_SOURCE"),
 		DBName:  os.Getenv("DB_NAME"),
 		DBPort:  os.Getenv("DB_PORT"),
 		DBUser:  os.Getenv("DB_USER"),
@@ -30,4 +31,9 @@ func LoadEnv() *Env {
 		APIHost: os.Getenv("API_HOST"),
 		APIPort: os.Getenv("API_PORT"),
 	}
+	return env
+}
+
+func GetEnv() *Env {
+	return env
 }
