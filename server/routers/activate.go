@@ -34,7 +34,7 @@ func Activate() {
 
 	env := config.GetEnv()
 	fmt.Println("Starting server at:", env.APIHost+":"+env.APIPort)
-	err := router.Run(env.APIHost + ":" + env.APIPort)
+	err := router.Run(":" + env.APIPort)
 	if err != nil {
 		return
 	}
